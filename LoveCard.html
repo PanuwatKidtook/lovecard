@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ถึงแฟนที่น่ารัก 💕</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg,#ff9a9e,#fad0c4);
+    display:flex;justify-content:center;align-items:center;
+    height:100vh; overflow:hidden;
+    position:relative;
+  }
+  .card{
+    width:90%; max-width:600px;
+    min-height:400px;
+    background: rgba(255,255,255,0.3);
+    border-radius:20px;
+    box-shadow:0 0 25px rgba(255,105,180,0.5);
+    padding:20px;
+    text-align:center;
+    display:none;
+    flex-direction:column;
+    justify-content:center;
+  }
+  .show{display:flex;}
+  h1{color:#ff2e63;margin-bottom:15px;}
+  button{
+    background:#ff2e63;color:white;padding:10px 20px;
+    font-size:1rem;border-radius:12px;border:none;cursor:pointer;
+    transition:0.3s; margin-top:15px;
+    touch-action: manipulation; /* เพิ่มตรงนี้ */
+  }
+  button:hover{background:#ff5e8f;}
+  .image-container{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-top:15px;
+    min-height:300px;
+  }
+  .image-container img{
+    width: 100%;
+    max-width: 300px;
+    max-height: 300px;
+    border-radius:20px;
+    box-shadow:0 0 25px rgba(255,105,180,0.5);
+    object-fit:cover;
+    transform: scale(0);
+    transition: transform 1s ease;
+  }
+  /* ข้อความขอบคุณกลางจอ */
+  #thankyou-popup{
+    position:fixed;
+    top:50%; left:50%;
+    transform:translate(-50%, -50%);
+    background: rgba(255,255,255,0.95);
+    padding:30px 50px;
+    border-radius:20px;
+    box-shadow:0 0 20px rgba(255,105,180,0.7);
+    font-size:1.3rem;
+    color:#ff2e63;
+    text-align:center;
+    display:none;
+    z-index:999;
+    animation: fadeIn 1s ease forwards;
+  }
+  @keyframes fadeIn{
+    0%{opacity:0; transform:translate(-50%, -60%);}
+    100%{opacity:1; transform:translate(-50%, -50%);}
+  }
+</style>
+</head>
+<body>
+
+<!-- หน้าใส่รหัส -->
+<div class="card show" id="page0">
+  <h1>🔒 ใส่รหัสผ่าน</h1>
+  <input type="password" id="password" placeholder="กรอกรหัสที่นี่...">
+  <button type="button" onclick="nextPage()">เข้าสู่หน้าบอกรัก</button>
+</div>
+
+<!-- หน้า 1 -->
+<div class="card" id="page1">
+  <p>เค้ารักแฟนมากๆเลยน้าา 💕</p>
+  <button type="button" onclick="nextPage()">ถัดไป →</button>
+</div>
+
+<!-- หน้า 2 -->
+<div class="card" id="page2">
+  <p>รักทุกวันไม่มีวันไหนไม่รักเลย 🥰</p>
+  <button type="button" onclick="nextPage()">ถัดไป →</button>
+</div>
+
+<!-- หน้า 3 -->
+<div class="card" id="page3">
+  <p>คิดถึงมากๆ อยากกอด อยากหอมแก้ม อยากจุ้บๆ ที่สุด 😘</p>
+  <button type="button" onclick="nextPage()">ถัดไป →</button>
+</div>
+
+<!-- หน้า 4 -->
+<div class="card" id="page4">
+  <p>และสุดท้ายอยากบอกแฟนว่า...</p>
+  <p><b>อยู่กับเค้าไปนานๆเลยน้าา 💖 นานแสนนานก็จะรักเพียงคุณคนเดียว</b></p>
+  <button type="button" onclick="nextPage()">ถัดไป →</button>
+</div>
+
+<!-- หน้า 5: รูปภาพทีละรูป + เพลง -->
+<div class="card" id="page5">
+  <h1>💌 หน้าสุดท้าย 💌</h1>
+  <div class="image-container">
+    <img id="final-image" src="" alt="รูปแฟน">
+  </div>
+  <button type="button" id="next-image-btn">ถัดไป →</button>
+
+  <!-- เพลง -->
+  <audio id="song" autoplay controls style="margin-top:10px; width:100%;">
+    <source src="https://raw.githubusercontent.com/PanuwatKidtook/Song/main/Flower.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+  </audio>
+</div>
+
+<!-- ข้อความขอบคุณกลางจอ -->
+<div id="thankyou-popup">ขอบคุณที่ดูคั้บแฟนที่น่ารักของเค้า 💖</div>
+
+<script>
+let currentPage = 0;
+const totalPages = 6;
+
+// ตัวอย่าง Base64 ของรูป ใส่ของจริงแทนได้เลย
+const finalImages = [
+  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBD...image1...",
+  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBD...image2...",
+  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBD...image3...",
+  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBD...image4..."
+];
+
+function nextPage(){
+  if(currentPage === 0){
+    const pass = document.getElementById("password").value;
+    if(pass !== "120448"){ alert("รหัสไม่ถูกต้องน้าา 💔"); return; }
+  }
+
+  document.getElementById("page"+currentPage).classList.remove("show");
+  currentPage++;
+  if(currentPage < totalPages){
+    document.getElementById("page"+currentPage).classList.add("show");
+  }
+
+  if(currentPage === totalPages-1){
+    const imgEl = document.getElementById("final-image");
+    const song = document.getElementById("song");
+    song.play();
+
+    let index = 0;
+
+    function showImage(i){
+      imgEl.style.transform = "scale(0)";
+      imgEl.src = finalImages[i];
+      setTimeout(()=>{ imgEl.style.transform = "scale(1)"; }, 50);
+    }
+
+    showImage(index);
+
+    const nextBtn = document.getElementById("next-image-btn");
+    nextBtn.onclick = () => {
+      index++;
+      if(index < finalImages.length){
+        showImage(index);
+      } else {
+        nextBtn.style.display = "none";
+        document.getElementById("thankyou-popup").style.display = "block";
+      }
+    };
+  }
+}
+</script>
+
+</body>
+</html>
